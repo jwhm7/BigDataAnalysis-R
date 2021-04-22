@@ -1,0 +1,90 @@
+---
+title: "Exercise 03"
+author: "Jiwon Moon"
+date: '2021 4 22 '
+output: html_document
+---
+
+### pg.112
+
+## 연습문제 1
+```{r}
+x <- c(1:100)
+x <- x[x %% 3 == 0]
+x
+```
+```{r}
+y <- c(1:100)
+y <- y[y %% 4 == 0]
+y
+```
+
+
+## 연습문제 2
+```{r}
+intersect(x, y)
+sum(intersect(x, y))
+```
+
+
+## 연습문제 3
+```{r}
+
+?airquality
+
+```
+Ans) New York
+
+
+## 연습문제 4
+```{r}
+
+?airquality
+
+```
+Ans) Temperature (degrees F)
+
+
+## 연습문제 5 (풀이 1)
+```{r}
+
+subset(airquality, Wind>=max(airquality$Wind), select = c('Month', 'Day'))
+
+```
+Ans) 1973.06.17
+
+
+## 연습문제 6 (풀이 1)
+```{r}
+
+table(is.na(airquality))
+
+```
+Ans) 44개
+
+## 연습문제 6 (풀이 2)
+```{r}
+
+sum(is.na(airquality))
+
+```
+Ans) 44개
+
+
+## 연습문제 7
+```{r}
+
+?quakes
+
+```
+Ans) Fiji
+
+
+
+## 연습문제 8
+```{r}
+
+max(quakes$mag)
+
+```
+Ans) 강도 6.4
