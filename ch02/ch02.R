@@ -46,3 +46,5 @@ tips %>% ggplot(aes(total_bill, tip))+geom_point()  # 산점도
 tips %>% ggplot(aes(total_bill, tip))+geom_point(aes(col=day))
 tips %>% ggplot(aes(total_bill, tip))+geom_point(aes(col=day, pch=sex), size=3)
 tips %>% ggplot(aes(total_bill, tip))+geom_point(aes(col=day, pch=time), size=3)
+
+# 
