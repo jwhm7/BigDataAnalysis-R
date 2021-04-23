@@ -73,7 +73,7 @@ boxplot(airquality$Ozone)$stats
 
 air <- airquality
 air$Ozone <- ifelse(air$Ozone<boxplot(airquality$Ozone)$stats[1] |
-                     air$Ozone>boxplot(airquality$Ozone)$stats[5],    # 왜 5...?
+                     air$Ozone>boxplot(airquality$Ozone)$stats[5],    # boxplot의 행 번호임.
                      NA, air$Ozone)
 sum(is.na(air$Ozone))
 sum(is.na(airquality$Ozone))

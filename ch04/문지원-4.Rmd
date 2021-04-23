@@ -1,0 +1,64 @@
+---
+title: "Exercise 4"
+author: "문지원"
+date: '2021 4 23 '
+output: html_document
+---
+### pg. 146
+
+## 연습문제 1
+```{r}
+sum <- 0
+for (i in 1:100) {
+   if (i %% 3 == 0 & i %% 4 != 0) {
+      sum <- sum + i
+   }
+}
+print(sum)
+```
+Ans) 1251
+
+
+## 연습문제 2
+```{r}
+mul_sum <- function(n,x){
+   sum <- 0
+   for(i in 1:n) {
+      if(i %% x == 0){
+      sum <- sum + i
+      }
+   }
+   return(sum)
+}
+
+mul_sum(6,2)
+```
+
+
+## 연습문제 3
+```{r hflights}
+library(hflights)
+sum(is.na(hflights))
+```
+Ans) 25755개
+
+
+## 연습문제 4
+```{r}
+max(hflights$AirTime, na.rm = T)
+```
+Ans) 9시간 15분
+
+
+## 연습문제 5
+```{r}
+max(hflights$Distance, na.rm = T)
+```
+Ans) 3904 miles
+
+
+## 연습문제 6
+```{r}
+sum(hflights$Cancelled, na.rm = T)
+```
+Ans) 2973 건
