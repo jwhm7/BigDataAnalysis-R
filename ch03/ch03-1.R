@@ -63,7 +63,7 @@ is.factor(as.factor(c))
 # 연산자
 5^2
 4^(1/2)
-x %% y    # 나머지(Modulo)
+x %% y    # 나머지(Modulo)  # n의 배수인 수 설정 시 자주 사용
 x %/% y   # 몫
 y <- 2
 
