@@ -67,7 +67,21 @@ mpg$grade <- ifelse(mpg$total>=30, 'A',
 table(mpg$grade)
 qplot(mpg$grade)
 
-# mutate - 새로운 변수 추가
+gapminder %>% 
+    filter(continent=='Asia') %>%
+    group_by(country) %>%
+    summarize(life_avg=mean(lifeExp)) %>%
+    arrange(desc(life_avg)) %>%
+    head(5)
+# 2007년 인구수 5000만 이상인 국가 중 기대 수명이 가장 큰 Top5 국가
+gapminder %>%
+    filter(year==2007 & pop>=5e7) %>%
+    group_by(country) %>%
+    summarize(life_avg=mean(lifeExp)) %>%
+    arrange(desc(life_avg)) %>%
+    head(5)
+
+# 5. mutate - 새로운 변수 추가
 mpg %>%
     mutate(grade2=ifelse(mpg$total>=30, 'A',
                          ifelse(mpg$total>=20, 'B', 'C')))
