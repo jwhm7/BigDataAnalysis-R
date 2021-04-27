@@ -15,21 +15,28 @@ library(ggplot2)
 library(gapminder)
 pop_1952 <-gapminder %>% 
    filter(year== 1952) %>% 
-   select(country, pop) %>% 
    arrange(desc(pop)) %>% 
    head()
 pie(pop_1952$pop, pop_1952$country)
+barplot(pop_1952$pop, names.arg= pop_1952$country)
 ```
+
 (2) 1952년~2007년의 인구 구성을 for문을 이용해 반복적으로 시각화하라.
 ```{r}
-?gapminder   # ranges from 1952 to 2007in increments of 5 years
-
+year_e <- seq(from = 1952,to = 2007, by = 5)
+for(i in 1:12){
+   pop_e<- gapminder %>% 
+      filter(year == year_e[i]) %>%
+      arrange(desc(pop)) %>% 
+      head()
+   pie(as.numeric(pop_e$pop), as.numeric(pop_e$country), main = year_e[i])
+   barplot(pop_e$pop, names.arg=(pop_e$country), main = year_e[i])
+}
 ```
 
 (3) 시각화 그래프를 통해 알게 된 사실을 몇 가지로 요약하라.
-```{r}
 
-```
+Ans) 1952년 부터 2007년까지 1, 2, 3위의 순위는 유지되었다(중국, 인도, 미국 순). 일본은 1962년 부터 순위가 하락세였고, 1977년 부터는 브라질에 밀렸다.  1997년 부터는  6위 밖으로 밀려나고 파키스탄이 6위를 차지했다.
 
 
 ### 연습문제 1
@@ -38,39 +45,68 @@ Q) ggplot2를 이용하여 Iris 데이터 셋에 대해서 다음 문제를 푸�
 ```{r}
 iris_se <- iris %>% 
    filter(Species== 'setosa')
-plot(iris_se$Petal.Width, iris_se$Petal.Length, main= 'Setosa Data Set- Petal')
+ggplot(iris_se,aes(Sepal.Length, Sepal.Width)) +
+   geom_point()+
+      ggtitle('Setosa-Sepal')
 ```
+
 ```{r}
 iris_se <- iris %>% 
    filter(Species== 'setosa')
-plot(iris_se$Sepal.Width, iris_se$Sepal.Length, main= 'Setosa Data Set- Sepal')
+ggplot(iris_se,aes(Petal.Length, Petal.Width)) +
+   geom_point()+
+      ggtitle('Setosa-Petal')
 ```
+
 ```{r}
 iris_ve <- iris %>% 
    filter(Species== 'versicolor')
-plot(iris_ve$Petal.Width, iris_ve$Petal.Length, main= 'Versicolor Data Set- Petal')
+ggplot(iris_ve,aes(Sepal.Length, Sepal.Width)) +
+   geom_point()+
+      ggtitle('Versicolor-Sepal')
 ```
+
 ```{r}
 iris_ve <- iris %>% 
    filter(Species== 'versicolor')
-plot(iris_ve$Sepal.Width, iris_ve$Sepal.Length, main= 'Versicolor Data Set- Sepal')
+   ggplot(iris_ve,aes(Petal.Length, Petal.Width)) +
+   geom_point()+
+      ggtitle('Versicolor-Petal')
 ```
+
 ```{r}
 iris_vi <- iris %>% 
    filter(Species== 'virginica')
-plot(iris_vi$Petal.Width, iris_vi$Petal.Length, main= 'Virginica Data Set- Petal')
+   ggplot(iris_vi,aes(Sepal.Length, Sepal.Width)) +
+   geom_point()+
+      ggtitle('Virginica-Sepal')
 ```
+
 ```{r}
-iris_ve <- iris %>% 
-   filter(Species== 'versicolor')
-plot(iris_ve$Sepal.Width, iris_ve$Sepal.Length, main= 'Versicolor Data Set- Sepal')
+iris_vi <- iris %>% 
+   filter(Species== 'virginica')
+   ggplot(iris_vi,aes(Petal.Length, Petal.Width)) +
+   geom_point()+
+      ggtitle('Virginica-Petal')
 ```
+
 (2) 품종별 Sepal/Petal의 Length/Width 평균을 비교하되 항목을 옆으로 늘어놓은 것(beside=T)과 위로 쌓아올린 것 2개를 그리시오.(총 12개 항목의 데이터를 2개의 그래프에)
 ```{r}
- 
+iris_m <- iris %>% 
+   group_by(Species) %>% 
+   summarize(mean_SL=mean(Sepal.Length),mean_SW=mean(Sepal.Width),mean_PL=mean(Petal.Length),mean_PW=mean(Petal.Width))
+barplot(as.matrix(iris_m[,c(2:5)]), main = "Comparison of the Means of Each Species")
 ```
+
+```{r}
+iris_m <- iris %>% 
+   group_by(Species) %>% 
+   summarize(mean_SL=mean(Sepal.Length),mean_SW=mean(Sepal.Width),mean_PL=mean(Petal.Length),mean_PW=mean(Petal.Width))
+barplot(as.matrix(iris_m[,c(2:5)]), main = "Comparison of the Means of Each Species", beside=T)
+```
+
 (3) 박스 플롯 그리기
 ```{r}
-
+boxplot(iris, main= "Iris")
 ```
 
