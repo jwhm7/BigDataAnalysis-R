@@ -1,0 +1,30 @@
+---
+title: "Exercise 7"
+author: "문지원"
+date: '2021 4 29 '
+output: html_document
+---
+### 연습문제 1 (pg. 237)
+Q) [그림 7-4]와 [표 7-3]을 제시하고, 잔차 제곱합과 평균 제곱 오차를 구하라
+1) [그림 7-4]
+```{r}
+x= c(10.0, 12.0, 9.5, 22.2, 8.0)
+y= c(360.2, 420.0, 359.5, 679.0, 315.3)
+model <- lm(y ~ x)
+model
+plot(x, y)
+abline(model, col= 'red')
+```
+(2) [표 7-3]
+```{r}
+summary(model)
+```
+(3) 잔차 제곱합
+```{r}
+deviance(model)
+```
+(4) 평균 제곱합
+```{r}
+deviance(model) / length(Y)
+```
+
