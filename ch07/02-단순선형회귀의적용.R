@@ -42,3 +42,17 @@ for(i in 1:4) {
 # 분산 분석(anova)
 anova(m.1, m.2, m.3, m.4)
 # p value만 보면 됨. 다 0.05보다 크기때문에 있으나 마나.
+
+# Women data
+women
+plot(women)
+m <- lm(weight~height, data = women)
+abline(m, col='red', lwd=2)
+summary(m)
+
+# 2차식으로 모델링
+m2 <-lm(weight~poly(height, 2), data=women)
+x <- seq(58, 72, length.out=300)
+y <- predict(m2,data.frame(height=x))
+lines(x, y, col='blue', lwd=2)
+# in this case, it is not so bad to do 2차식. The two lines are almost similar.
