@@ -1,4 +1,4 @@
-# Anscombe's Quartet
+# Anscombe's Quartet  -> 후에 공부
 head(anscombe)
 
 # 평균
