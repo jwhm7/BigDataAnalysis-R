@@ -8,6 +8,9 @@ output: html_document
 ### (1) Decision Tree
 ```{r}
 library(rpart)
+library(caret)
+library(lattice)
+library(ggplot2)
 ucla <- read.csv('http://stats.idre.ucla.edu/stat/data/binary.csv')
 ucla$admit= factor(ucla$admit)
 
@@ -33,20 +36,22 @@ confusionMatrix(pred, ucla_test$admit)
 # Accuracy = 0.6203
 # 62.03%로, 정확도가 높다고 하기 어렵다.
 ```
-### (2) Random Forest
 ```{r}
-set.seed(2021)
-ucla_index <- createDataPartition(ucla$admit, p= 0.8, list=F)
-ucla_train <- ucla[ucla_index, ]
-ucla_test <- ucla[-ucla_index, ]
+# 시각화
+par(mfrow=c(1,1), xpd=NA)
+plot(dtc)
+text(dtc, use.n=T)
 ```
 
+### (2) Random Forest
 ```{r}
 # 모델링
+library(randomForest)
 rf <- randomForest(admit~., ucla_train,
                    ntree= 100, nodesize= 4)
 rf
 ```
+
 ```{r}
 # 예측
 pred <- predict(rf, ucla_test, type= 'class')
@@ -64,11 +69,6 @@ plot(rf)
 ```{r}
 library(caret)
 library(e1071)
-
-set.seed(2021)
-ucla_index <- createDataPartition(ucla$admit, p= 0.8, list=F)
-ucla_train <- ucla[ucla_index, ]
-ucla_test <- ucla[-ucla_index, ]
 ```
 
 ```{r}
@@ -118,8 +118,6 @@ library(class)
 k <- knn(ucla_train[, 1:4], ucla_test[, 1:4], 
          ucla_train$admit, k= 5 )
 k
-```
-```{r}
 ucla_test$admit
 confusionMatrix(k, ucla_test$admit)
 # Accuracy = 0.9114
@@ -130,8 +128,6 @@ confusionMatrix(k, ucla_test$admit)
 k <- knn(ucla_train[, 1:4], ucla_test[, 1:4], 
          ucla_train$admit, k= 3 )
 k
-```
-```{r}
 ucla_test$admit
 confusionMatrix(k, ucla_test$admit)
 # Accuracy = 0.9367
@@ -142,17 +138,92 @@ confusionMatrix(k, ucla_test$admit)
 k <- knn(ucla_train[, 1:4], ucla_test[, 1:4], 
          ucla_train$admit, k= 7 )
 k
-```
-```{r}
 ucla_test$admit
 confusionMatrix(k, ucla_test$admit)
 # Accuracy = 0.8608
 # 86.08%로 k= 5, 3일 때 보다 정확도가 떨어진다.
 ```
 
-
 ## 2. wine 4가지 모델, 모델링, 예측, 평가
 ```{r}
+getwd()
+setwd("/Users/JiwonMoon/R")
+wine <- read.table('data/wine_data.txt', sep = ',')
+columns <-readLines('data/wine_name.txt')
+names(wine)[1:14] <- columns
+names(wine)[1:14] <-substr(columns, 4, nchar(columns))
+names(wine)
+names(wine)[1] <- 'name'
+wine$name <- factor(wine$name)
+head(wine)
+```
+```{r}
+set.seed(2021)
+wine_index <- createDataPartition(wine$name, p= 0.8, list=F)
+wine_train <- wine[wine_index, ]
+wine_test <- wine[-wine_index, ]
+```
 
+### (1) Decision Tree
+```{r}
+# 모델링
+dtc <- rpart(name~., wine_train)
+
+# 예측
+pred <- predict(dtc, wine_test, type = 'class')
+
+# 평가
+confusionMatrix(pred, wine_test$name)
+# Accuracy = 0.9118
+# 91.18%로 매우 높은 정확도를 보인다.
+```
+```{r}
+par(mfrow=c(1,1), xpd=NA)
+plot(dtc)
+text(dtc, use.n=T)
+```
+
+### (2) Random Forest
+```{r}
+# 모델링
+rf <- randomForest(name~., wine_train,
+                   ntree= 100, nodesize= 4)
+rf
+
+# 예측
+pred <- predict(rf, wine_test, type= 'class')
+
+# 평가
+confusionMatrix(pred, wine_test$name)
+# Accuracy = 0.9706
+# 97.06%로 decision tree 보다도 높은 정확도를 보인다.
+```
+```{r}
+# 시각화
+plot(rf)
+```
+
+### (3) SVM
+```{r}
+# 모델링
+svc <- svm(name~., wine_train)
+
+# 예측
+pred <- predict(svc, wine_test, type= 'class')
+
+# 평가
+table(pred, wine_test$name)
+confusionMatrix(pred, wine_test$name)
+# Accuracy = 1
+# 100%의 정확도를 보인다.
+```
+### (4) K-NN
+```{r}
+k <- knn(wine_train[, 1:4], wine_test[, 1:4], 
+         wine_train$name, k= 4)
+k
+wine_test$name
+confusionMatrix(k, wine_test$name)
+# Accuracy = 1
 ```
 
