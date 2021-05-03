@@ -1,0 +1,158 @@
+---
+title: "Exercise 9"
+author: "문지원"
+date: '2021 5 3 '
+output: html_document
+---
+## 1. ucla 4가지 모델, 모델링, 예측, 평가
+### (1) Decision Tree
+```{r}
+library(rpart)
+ucla <- read.csv('http://stats.idre.ucla.edu/stat/data/binary.csv')
+ucla$admit= factor(ucla$admit)
+
+set.seed(2021)
+ucla_index <- createDataPartition(ucla$admit, p= 0.8, list=F)
+ucla_train <- ucla[ucla_index, ]
+ucla_test <- ucla[-ucla_index, ]
+
+dim(ucla_train)
+dim(ucla_test)
+table(ucla_train$admit)
+```
+```{r}
+# 모델링
+dtc <- rpart(admit~., data = ucla_train)
+
+# 예측
+pred <- predict(dtc, ucla_test, type = 'class')
+
+# 평가
+confusionMatrix(pred, ucla_test$admit)
+
+# Accuracy = 0.6203
+# 62.03%로, 정확도가 높다고 하기 어렵다.
+```
+### (2) Random Forest
+```{r}
+set.seed(2021)
+ucla_index <- createDataPartition(ucla$admit, p= 0.8, list=F)
+ucla_train <- ucla[ucla_index, ]
+ucla_test <- ucla[-ucla_index, ]
+```
+
+```{r}
+# 모델링
+rf <- randomForest(admit~., ucla_train,
+                   ntree= 100, nodesize= 4)
+rf
+```
+```{r}
+# 예측
+pred <- predict(rf, ucla_test, type= 'class')
+
+# 평가
+confusionMatrix(pred, ucla_test$admit)
+# Accuracy = 0.7342
+# 73.42%로 decision tree와 비교했을 때 상대적으로 정확도가 높지만, 자체로는 정확도가 높다고 하기 어렵다.
+```
+```{r}
+# 시각화
+plot(rf)
+```
+### (3)SVM
+```{r}
+library(caret)
+library(e1071)
+
+set.seed(2021)
+ucla_index <- createDataPartition(ucla$admit, p= 0.8, list=F)
+ucla_train <- ucla[ucla_index, ]
+ucla_test <- ucla[-ucla_index, ]
+```
+
+```{r}
+# 모델링
+svc <- svm(admit~., ucla_train)
+
+# 예측
+pred <- predict(svc, ucla_test, type= 'class')
+
+# 평가
+table(pred, ucla_test$admit)
+confusionMatrix(pred, ucla_test$admit)
+# Accuracy = 0.7342
+# 73.42%로 정확도가 높은 편이다.
+```
+```{r}
+# Hyper Parameter (cost= 100)
+svc100 <- svm(admit~., ucla_train, cost= 100)
+pred100 <- predict(svc100, ucla_test, type= 'class')
+table(pred100, ucla_test$admit)
+confusionMatrix(pred100, ucla_test$admit)
+# Accuracy = 0.6962
+# 69.62%로 정확도가 이전보다 낮아졌다.
+```
+```{r}
+# Hyper Paratmeter (cost= 50)
+svc50 <- svm(admit~., ucla_train, cost= 50)
+pred50 <- predict(svc50, ucla_test, type= 'class')
+table(pred50, ucla_test$admit)
+confusionMatrix(pred50, ucla_test$admit)
+# Accuracy = 0.7089
+# 70.89%로 cost가 100일 때 보다 정확도가 높아졌다.
+```
+```{r}
+# Hypter Parameter (cost= 40)
+svc40 <- svm(admit~., ucla_train, cost= 40)
+pred40 <- predict(svc40, ucla_test, type= 'class')
+table(pred40, ucla_test$admit)
+confusionMatrix(pred40, ucla_test$admit)
+# Accuracy = 0.7342
+# 73.42%로 정확도가 hyper parameter 전과 같다.
+```
+### (4) K-NN
+```{r}
+library(class)
+# k= 5
+k <- knn(ucla_train[, 1:4], ucla_test[, 1:4], 
+         ucla_train$admit, k= 5 )
+k
+```
+```{r}
+ucla_test$admit
+confusionMatrix(k, ucla_test$admit)
+# Accuracy = 0.9114
+# 91.14%로 정확도가 매우 높은편이다.
+```
+```{r}
+# k= 3
+k <- knn(ucla_train[, 1:4], ucla_test[, 1:4], 
+         ucla_train$admit, k= 3 )
+k
+```
+```{r}
+ucla_test$admit
+confusionMatrix(k, ucla_test$admit)
+# Accuracy = 0.9367
+# 93.67%로 k= 5일 때 보다 정확도가 높아졌다.
+```
+```{r}
+# k= 7
+k <- knn(ucla_train[, 1:4], ucla_test[, 1:4], 
+         ucla_train$admit, k= 7 )
+k
+```
+```{r}
+ucla_test$admit
+confusionMatrix(k, ucla_test$admit)
+# Accuracy = 0.8608
+# 86.08%로 k= 5, 3일 때 보다 정확도가 떨어진다.
+```
+
+
+## 2. wine 4가지 모델, 모델링, 예측, 평가
+```{r}
+
+```
+
