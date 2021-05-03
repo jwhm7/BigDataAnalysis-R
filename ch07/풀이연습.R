@@ -16,3 +16,4 @@ plot(df)
 model <- lm(son ~ father, data= df_m)
 coef(model)
 abline(model, col= 'red', lwd =3)
+
