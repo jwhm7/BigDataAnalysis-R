@@ -1,0 +1,199 @@
+---
+title: "Exercise 10"
+author: "문지원"
+date: '2021 5 4 '
+output: html_document
+---
+# 단원문제 10
+## 1. colon데이터에 랜덤 포레스트를 적용하는데, k-겹 교차검증을 k를 5, 10, 15, 20으로 바꾸면서 적용하라. 각각의 혼동 행렬과 정확률을 제시하라.
+```{r}
+library(caret)
+library(rpart)
+library(randomForest)
+library(e1071)
+library(class)
+library(survival)
+head(colon)
+
+colon = na.omit(colon)
+colon= colon[c(TRUE, FALSE), ]
+colon$status <- factor(colon$status)
+```
+### (1) K= 5 
+```{r}
+set.seed(2021)
+data <- colon[sample(nrow(colon)),]
+
+control_5 <- trainControl(method= 'cv', number= 5)
+rf_5 <- train(status~., data = colon, method= 'rf',
+              metric= 'Accuracy', trControl= control_5)
+```
+
+```{r}
+# 혼동행렬
+confusionMatrix(rf_5)
+```
+
+```{r}
+# 정확도
+confusionMatrix(rf_5)$table[2,2]/(confusionMatrix(rf_5)$table[2,1] + 
+                                  confusionMatrix(rf_5)$table[2,2])
+```
+### (2) K= 10
+```{r}
+set.seed(2021)
+data <- colon[sample(nrow(colon)),]
+
+control_10 <- trainControl(method= 'cv', number= 10)
+rf_10 <- train(status~., data = colon, method= 'rf',
+              metric= 'Accuracy', trControl= control_10)
+```
+
+```{r}
+# 혼동행렬
+confusionMatrix(rf_10)
+```
+```{r}
+# 정확도
+confusionMatrix(rf_10)$table[2,2]/(confusionMatrix(rf_10)$table[2,1] + 
+                                  confusionMatrix(rf_10)$table[2,2])
+```
+### (3) K= 15
+```{r}
+set.seed(2021)
+data <- colon[sample(nrow(colon)),]
+
+control_15 <- trainControl(method= 'cv', number= 15)
+rf_15 <- train(status~., data = colon, method= 'rf',
+              metric= 'Accuracy', trControl= control_15)
+```
+
+```{r}
+# 혼동행렬
+confusionMatrix(rf_15)
+```
+```{r}
+# 정확도
+confusionMatrix(rf_15)$table[2,2]/(confusionMatrix(rf_15)$table[2,1] + 
+                                  confusionMatrix(rf_15)$table[2,2])
+```
+### (4) K= 20
+```{r}
+set.seed(2021)
+data <- colon[sample(nrow(colon)),]
+
+control_20 <- trainControl(method= 'cv', number= 20)
+rf_20 <- train(status~., data = colon, method= 'rf',
+              metric= 'Accuracy', trControl= control_20)
+```
+
+```{r}
+# 혼동행렬
+confusionMatrix(rf_20)
+```
+```{r}
+# 정확도
+confusionMatrix(rf_20)$table[2,2]/(confusionMatrix(rf_20)$table[2,1] + 
+                                  confusionMatrix(rf_20)$table[2,2])
+```
+
+## 2. 353~356쪽의 과정을 UCLA admission 데이터에 대해 수행하라.
+```{r}
+ucla <- read.csv('http://stats.idre.ucla.edu/stat/data/binary.csv')
+head(ucla)
+```
+```{r}
+set.seed(2021)
+data <- ucla[sample(nrow(ucla)),]
+ucla$admit <- factor(ucla$admit)
+```
+
+```{r}
+control <- trainControl(method='cv', number= 5)
+L <- train(admit~., data= ucla, method= 'svmLinear', metric= 'Accuracy', 
+           trControl= control)
+LM <- train(admit~., data= ucla, method= 'svmLinearWeights', metric= 'Accuracy', 
+            trControl= control)
+P <- train(admit~., data= ucla, method= 'svmPoly', metric= 'Accuracy',
+           trControl= control)
+R <- train(admit~., data= ucla, method= 'svmRadial', metric= 'Accuracy',
+           trControl= control)
+RW <- train(admit~., data= ucla, method= 'svmRadialWeights', metric= 'Accuracy',
+            trControl= control)
+f100 <- train(admit~., data= ucla, method= 'rf', ntree= 100, metric= 'Accuracy',
+              trControl= control)
+f300 <- train(admit~., data= ucla, method= 'rf', ntree= 300, metric= 'Accuracy',
+              trControl= control)
+f500 <- train(admit~., data= ucla, method= 'rf', ntree= 500, metric= 'Accuracy',
+              trControl= control)
+r <- train(admit~., data= ucla, method= 'rpart', metric= 'Accuracy',
+           trControl= control)
+k <- train(admit~., data= ucla, method= 'knn', metric= 'Accuracy',
+           trControl= control)
+g <- train(admit~., data= ucla, method= 'glm', metric= 'Accuracy',
+           trControl= control)
+
+resamp <- resamples(list(선형= L, 선형가중치= LM, 다항식= P, RBF= R, 가중치= RW, 
+                    rf100= f100, rf300= f300, rf500= f500, tree= r, KNN= k, glm= g))
+```
+
+```{r}
+summary(resamp)
+```
+```{r}
+sort(resamp, decreasin= TRUE)
+# 평균 정확률 71.23%로 RBF가 가장 뛰어난 성능을 보인다. 반면에 K-NN과 결정트리 100개의 랜덤포레스트(rf100)가 가장 낮은 평균 정확률 (67.24%)을 보였다.
+```
+```{r}
+dotplot(resamp)
+```
+
+## 3. 353~356쪽의 과정을 voice 데이터에 대해 수행하라.
+```{r}
+voice <- read.csv('data/voice.csv')
+str(voice)
+```
+```{r}
+set.seed(2021)
+data <- voice[sample(nrow(voice)),]
+voice$label <- factor(voice$label)
+```
+
+```{r}
+control <- trainControl(method='cv', number= 10)
+L <- train(label~., data= voice, method= 'svmLinear', metric= 'Accuracy', 
+           trControl= control)
+LM <- train(label~., data= voice, method= 'svmLinearWeights', metric= 'Accuracy', 
+            trControl= control)
+P <- train(label~., data= voice, method= 'svmPoly', metric= 'Accuracy',
+           trControl= control)
+R <- train(label~., data= voice, method= 'svmRadial', metric= 'Accuracy',
+           trControl= control)
+RW <- train(label~., data= voice, method= 'svmRadialWeights', metric= 'Accuracy',
+            trControl= control)
+f100 <- train(label~., data= voice, method= 'rf', ntree= 100, metric= 'Accuracy',
+              trControl= control)
+f300 <- train(label~., data= voice, method= 'rf', ntree= 300, metric= 'Accuracy',
+              trControl= control)
+f500 <- train(label~., data= voice, method= 'rf', ntree= 500, metric= 'Accuracy',
+              trControl= control)
+r <- train(label~., data= voice, method= 'rpart', metric= 'Accuracy',
+           trControl= control)
+k <- train(label~., data= voice, method= 'knn', metric= 'Accuracy',
+           trControl= control)
+g <- train(label~., data= voice, method= 'glm', metric= 'Accuracy',
+           trControl= control)
+resamp <- resamples(list(선형= L, 선형가중치= LM, 다항식= P, RBF= R, 가중치= RW, 
+                           rf100= f100, rf300= f300, rf500= f500, tree= r, KNN= k, glm= g))
+```
+
+```{r}
+summary(resamp)
+```
+```{r}
+sort(resamp, decreasin= TRUE)
+# 평균 정확률 98.36%로 '가중치'가 가장 뛰어난 성능을 보인다. 반면에 'K-NN'이 72.54%로 가장 낮은 평균 정확률을 보였다.
+```
+```{r}
+dotplot(resamp)
+```
