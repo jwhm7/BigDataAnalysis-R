@@ -33,3 +33,20 @@ control <- trainControl(method='cv', number= 5)
 new_rf <- train(Species~., data= iris, method='rf',
                 metric= 'Accuracy', trControl= control)
 confusionMatrix(new_rf)
+
+##########################################################
+# 4개 모델에 적용
+##########################################################
+control <- trainControl(method='cv', number= 5)
+dt <- train(Species~., data=iris, method= 'rpart',
+            metric= 'Accuracy', trControl= control)
+rf <- train(Species~., data=iris, method= 'rf',
+             metric= 'Accuracy', trControl= control)
+sv <- train(Species~., data=iris, method= 'svmRadial',
+       metric= 'Accuracy', trControl= control)
+kn <- train(Species~., data=iris, method= 'knn',
+            metric= 'Accuracy', trControl= control)
+resamp <- resamples(list(결정트리= dt, 랜덤포레스트= rf, SVM= sv, KNN= kn))
+summary(resamp)
+sort(resamp, decreasing= T)
+dotplot(resamp)
