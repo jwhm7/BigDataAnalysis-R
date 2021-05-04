@@ -1,42 +1,3 @@
-# ucla
-# 1) 4가지 모델 DT, RF, SV, K-NN
-library(caret)
-ucla <- read.csv('http://stats.idre.ucla.edu/stat/data/binary.csv')
-head(ucla)
-set.seed(2021)
-data <- ucla[sample(nrow(ucla)),]
-head(data)
-ucla$admit <- factor(ucla$admit)
-control <- trainControl(method='cv', number= 5)
-dt <- train(admit~., data=ucla, method= 'rpart',
-            metric= 'Accuracy', trControl= control)
-rf <- train(admit~., data=ucla, method= 'rf',
-            metric= 'Accuracy', trControl= control)
-sv <- train(admit~., data=ucla, method= 'svmRadial',
-            metric= 'Accuracy', trControl= control)
-kn <- train(admit~., data=ucla, method= 'knn',
-            metric= 'Accuracy', trControl= control)
-resamp <- resamples(list(결정트리= dt, 랜덤포레스트= rf, SVM= sv, KNN= kn))
-summary(resamp)
-sort(resamp, decreasing= T)
-dotplot(resamp)
-# 2) CV= 5
-# 3) 정확도, 정밀도, 재현률
-confusionMatrix(dt)
-# TP = 64.5, FP = 25.2, FN = 3.8, TN = 6.5
-# 정확도
-(64.5+25.2)/nrow(ucla)   # 0.22425
-# 정밀도
-(64.5)/(64.5+25.2)       # 0.7190635
-# 재현률
-(64.5)/(64.5+3.8)        # 0.9443631
-# 풀이
-table(pred, Y)
-(t[1,1]+t[2,2])/nrow(ucla)
-(t[2,2])/(t[2,1]+t[2,2])
-(t[2,2])/(t[1,2]+t[2,2])
-############################################################################
-
 # UCLA 데이터에 대해서 Cross validation을 하고 
 # 4가지 모델에 대해서 정확도, 정밀도, 재형율을 구하시오
 library(caret)
@@ -145,7 +106,7 @@ for(i in 1:k){
   data_test <- data[test_list, ]
   data_train <- data[-test_list, ]
   pred <- knn(data_train[,2:4], data_test[,2:4],
-                  data_train$admit, k=5)
+              data_train$admit, k=5)
   t <- table(pred, data_test$admit)
   accuracy <- accuracy + (t[1,1] + t[2,2]) / nrow(data_test)
   precision <- precision + t[2,2]/(t[2,1]+t[2,2])
@@ -156,5 +117,44 @@ knn_avg_accuracy <- accuracy / k
 knn_avg_prec <- precision / k
 knn_avg_recall <- recall / k
 options(digits = 4)
-sprintf('knn: 정확도= %f, 정밀도= %f, 재현률= %f',
+sprintf('K-NN: 정확도= %f, 정밀도= %f, 재현률= %f',
         knn_avg_accuracy, knn_avg_prec, knn_avg_recall)
+
+############################################################################
+# ucla
+# 1) 4가지 모델 DT, RF, SV, K-NN
+library(caret)
+ucla <- read.csv('http://stats.idre.ucla.edu/stat/data/binary.csv')
+head(ucla)
+set.seed(2021)
+data <- ucla[sample(nrow(ucla)),]
+head(data)
+ucla$admit <- factor(ucla$admit)
+control <- trainControl(method='cv', number= 5)
+dt <- train(admit~., data=ucla, method= 'rpart',
+            metric= 'Accuracy', trControl= control)
+rf <- train(admit~., data=ucla, method= 'rf',
+            metric= 'Accuracy', trControl= control)
+sv <- train(admit~., data=ucla, method= 'svmRadial',
+            metric= 'Accuracy', trControl= control)
+kn <- train(admit~., data=ucla, method= 'knn',
+            metric= 'Accuracy', trControl= control)
+resamp <- resamples(list(결정트리= dt, 랜덤포레스트= rf, SVM= sv, KNN= kn))
+summary(resamp)
+sort(resamp, decreasing= T)
+dotplot(resamp)
+# 2) CV= 5
+# 3) 정확도, 정밀도, 재현률
+confusionMatrix(dt)
+# TP = 64.5, FP = 25.2, FN = 3.8, TN = 6.5
+# 정확도
+(64.5+25.2)/nrow(ucla)   # 0.22425
+# 정밀도
+(64.5)/(64.5+25.2)       # 0.7190635
+# 재현률
+(64.5)/(64.5+3.8)        # 0.9443631
+# 풀이
+table(pred, Y)
+(t[1,1]+t[2,2])/nrow(ucla)
+(t[2,2])/(t[2,1]+t[2,2])
+(t[2,2])/(t[1,2]+t[2,2])
