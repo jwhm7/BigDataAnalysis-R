@@ -4,7 +4,7 @@ library(caret)
 library(rpart)
 library(randomForest)
 library(e1071)
-library(class)
+library(class) 
 
 set.seed(2021)
 ucla <- read.csv('http://stats.idre.ucla.edu/stat/data/binary.csv')
