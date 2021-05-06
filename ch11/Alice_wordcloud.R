@@ -23,6 +23,7 @@ v[1:5]
 df <- data.frame(word= names(v), freq= v)
 head(df)
 
+
 library(wordcloud2)
 library(htmlwidgets)
 library(htmltools)
