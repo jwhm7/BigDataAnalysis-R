@@ -112,3 +112,4 @@ week_chart <- data.frame(
    artist=artist_vec, album=album_vec
 )      
 View(week_chart)
+
