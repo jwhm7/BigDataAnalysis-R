@@ -1,14 +1,17 @@
 # 1. 한빛 25 페이지
 
 for(i in c(1, 2, 3, 28)){
-   tr <- trs[1]
+   tr <- trs[i]
    tds <- html_nodes(tr, 'td') 
    spans <- html_nodes(tds[2], 'span')
    spans
-   last_str <- html_text(spans[4])
+   last_str <- html_text(spans[3])
+   last_str <- gsub('[[:digit:]]', '', last_str)
    last_str
-   if (length(spans) == 3) {
-      t <- as.integer(html_text(spans[3]))
+   length(spans)
+   if (length(spans) == 4) {
+      t <- as.integer(gsub('\\D','',html_text(spans[3])))
+      t
       if (last_str == '유지') {
          last_rank <- rank
       } else if (last_str == '상승') {
@@ -18,7 +21,9 @@ for(i in c(1, 2, 3, 28)){
       } else {
       last_rank <- 999
    }
+   }
 }
+last_rank
 
 # 2. 지니 뮤직 전일 차트 1~100 위 rank, last_rank, title, artist, album
 library(rvest)
@@ -41,7 +46,7 @@ tr <- trs[1]
 rank <- tr %>% 
       html_node('td.number') %>% 
       html_text()
-gsub('\n','',rank)
+# rank <- gsub('\n','',rank)
 len <- nchar(rank)
 rank <- as.integer(substring(rank, 1, len-504))
 rank <- as.integer(rank)
@@ -59,18 +64,21 @@ for (tr in trs) {
    spans <- html_nodes(tds[2], 'span')
    spans
    last_str <- html_text(spans[3])
+   last_str <- gsub('[[:digit:]]', '', last_str)
    last_str
-   if (length(spans) == 3) {
-      t <- as.integer(html_text(spans[3]))
-      if (last_str == '상승') {
+   length(spans)
+   if (length(spans) == 4) {
+      t <- as.integer(gsub('\\D','',html_text(spans[3])))
+      t
+      if (last_str == '유지') {
          last_rank <- rank
-      } else if (last_str == '하강') {
+      } else if (last_str == '상승') {
          last_rank <- rank + t
-      } else {
+      } else if (last_str== '하강') {
          last_rank <- rank - t
+      } else {
+         last_rank <- 999
       }
-   } else {
-      last_rank <- 999
    }
 
 title <- tr %>% 
@@ -100,3 +108,4 @@ rank=rank_vec, last_rank=last_vec, title=title_vec,
 artist=artist_vec, album=album_vec
 )      
 View(week_chart)
+
