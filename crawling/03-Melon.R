@@ -20,6 +20,7 @@ tr <- trs[1]
 rank <- tr %>% 
    html_node('span.rank') %>% 
    html_text()
+rank
 rank <- as.integer(rank)
 # 전주 순위: 1, 2, 3, 22 (유지, 상승, 하강, 신규)
 for (i in c(1, 2, 3, 22)) {
