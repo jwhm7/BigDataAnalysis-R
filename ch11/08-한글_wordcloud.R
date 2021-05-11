@@ -16,6 +16,7 @@ doc <- xpathSApply(html, '//p', xmlValue)
 length(doc)
 doc[1]
 
+
 # 전처리 수행
 # 한글과 space만 남기고 다른 모든 글자를 지운다
 hdoc <- gsub('[^ㄱ-ㅎ|ㅏ-ㅣ|가-힣 ]', '', doc)   # 힣 뒤에 space필요.
