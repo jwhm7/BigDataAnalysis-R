@@ -1,4 +1,16 @@
 ## Big Data Analysis
-##### # Data Analysis Using R
-> **Maestro Course of Big Data Strategy Based on the Practical Projects &nbsp;(2021.04 &nbsp;~&nbsp; 2021.10)** <br/>
-*Korean Economic Daily, Ministry of Science and ICT, Institute of Information & Communications Technology Planning & Evaluation(IITP)* 
+ㆍ **Functions**
+<br/>
+ㆍ **Visualization** (dplyr, ggplot2, gapminder)
+<br/>
+ㆍ **Hypothesis Testing**
+<br/>
+ㆍ **Losgistic Regression**
+<br/>
+ㆍ **Classification Modeling** (DecisionTree, RandomForest, SVM, KNN)
+<br/>
+ㆍ **Cross Validation**
+<br/>
+ㆍ **Wordcloud, KoNLP**
+<br/>
+ㆍ **Crawling**
